@@ -8,18 +8,63 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    
 
+    @IBOutlet weak var tableview: UITableView!
+    
+    var animals = ["ONE", "TWO", "THREE", "FOUR", "FIVE"]
+    var number = ["1", "2", "3", "4", "5"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        tableview.delegate=self
+        tableview.dataSource=self
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return number.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let identifier = "cell"
+        let cell = tableview.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+        
+        let myImage = UIImage(named:"cats.jpg")
+        cell.imageView?.image = myImage
+        
+        cell.textLabel?.text = animals[indexPath.row]
+        //cell.detailTextLabel?.text="section= \(indexPath.section) row=\(indexPath.row)"
+        
+        // cell에 detailText 넣기
+        cell.detailTextLabel?.text = number[indexPath.row]
+        
+        return cell
     }
 
-
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let mySection = indexPath.section
+        let myRow = indexPath.row
+        print("I selected \(mySection) Section \(myRow) Row")
+        let output = String(mySection) + " Section" + String(myRow) + " Row" + " Seclected"
+        
+        // Closure
+        let alert = UIAlertController(title: "AlertController", message: "Test", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: output, style: .default) { action in
+            // perhaps use action.title here
+            print("Default")
+            
+        })
+        
+        alert.addAction(UIAlertAction(title: "CANCEL", style: .cancel, handler: { (action) -> Void in
+            print("취소 했습니다.")
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 
